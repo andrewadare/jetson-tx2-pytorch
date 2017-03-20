@@ -63,21 +63,13 @@ sudo apt install -f
  - `ldconfig -p | grep cu` and `grep dnn` can be used to show the library locations. I also see /usr/include/cudnn.h
 
 ### cuDNN for PyTorch
-Since tools/setup_helpers/cuda.py assumes /usr/local/cuda, CUDA_HOME need not be set. But the default cuDNN paths are not set for the TX1/TX2. By looking at the mnistCUDNN executable installed by jetpack 2.3.1 via `ldd mnistCUDNN`, I see libcudnn in /usr/lib/aarch64-linux-gnu/. (Perhaps we should open a request to the PyTorch developers to search there too?)
+Since tools/setup_helpers/cuda.py assumes /usr/local/cuda, CUDA_HOME need not be set. But the default cuDNN paths are not set for the TX1/TX2.
 
-In pytorch/tools/setup_helpers/cudnn.py, there is a check for `os.getenv(CUDNN_LIB_DIR)` and another for the include dir. So I added the following to ~/.bashrc (or better yet, ~/.bash_profile):
+In pytorch/tools/setup_helpers/cudnn.py, there is a check for `os.getenv(CUDNN_LIB_DIR)` and another for the include dir. So I added the following to ~/.profile:*
 ```
 export CUDNN_LIB_DIR=/usr/lib/aarch64-linux-gnu
 export CUDNN_INCLUDE_DIR=/usr/include
 ```
-Note: It is not enough that you can echo these from the bash prompt. If they are exported from .bashrc, `os.getenv` returns `None` with sudo. If sudo is needed, -E will expose the environment variables to python:
-```
-[~]$ sudo python3 -c 'import os; print(os.getenv("CUDNN_LIB_DIR"))'
-None
-[~]$ sudo -E python3 -c 'import os; print(os.getenv("CUDNN_LIB_DIR"))'
-/usr/lib/aarch64-linux-gnu
-```
-Or, just export from .bash_profile instead. Then the -E is not needed. Either way, remember to source the script after editing!
 
 ## PyTorch source
 ```
@@ -107,3 +99,17 @@ sudo rm /var/cuda-repo-8.0-local/*.deb
 rm ~/temp # From my CMake 3.7 install
 ```
 The OpenCV sources can also be removed if necessary.
+
+
+## Footnotes
+*If you see this:
+```
+[~]$ sudo python3 -c 'import os; print(os.getenv("CUDNN_LIB_DIR"))'
+None
+```
+then cuDNN will fail to be included. Were the variables exported from ~/.bashrc instead of ~/.profile? Echoing at the prompt is not enough. Try this:
+```
+[~]$ sudo -E python3 -c 'import os; print(os.getenv("CUDNN_LIB_DIR"))'
+/usr/lib/aarch64-linux-gnu
+```
+Exporting from ~/.profile is the preferred approach, but it requires a logout/login.
