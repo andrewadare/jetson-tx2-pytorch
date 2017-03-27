@@ -7,10 +7,9 @@ Although the TX2 has an ample 32 GB of eMMC, the TX1 has only half that, and it 
 The PyTorch developers recommend the Anaconda distribution. I was unable to find a recent Anaconda setup for ARM64, so I used the global python libraries.
 
 ## Scipy and LA libs
- - sudo apt install libopenblas-dev
- - sudo apt install libatlas-dev
- - sudo apt install liblapack-dev
- - sudo -H pip3 install scipy  # ~20-30 min
+ - sudo apt install libopenblas-dev libatlas-dev liblapack-dev
+ - sudo apt install liblapacke-dev checkinstall # For OpenCV
+ - sudo -H pip3 install numpy scipy  # ~20-30 min
 
 ## Build tool prerequisites
  - pip3 install pyyaml
@@ -26,7 +25,7 @@ Check `cmake --version`. It looks like cmake >= 3.6 is required for the python b
  - pip3 install cffi
 
 ## OpenCV
-I followed a subset of these [excellent instructions](http://www.pyimagesearch.com/2016/10/24/ubuntu-16-04-how-to-install-opencv/) for Python 3 from the pyimagesearch blog. I skipped the opencv_contrib modules to save space and build time. I also skipped CUDA and OpenCL integration, and went system-wide with the Python 3 bindings (no virtualenvs). Under the OpenCV source directory, I created build/ and ran this:
+I followed a subset of these excellent [instructions](http://www.pyimagesearch.com/2016/10/24/ubuntu-16-04-how-to-install-opencv/) for Python 3 from the pyimagesearch blog. I skipped the opencv_contrib modules to save space and build time. I also skipped CUDA and OpenCL integration, and went system-wide with the Python 3 bindings (no virtualenvs). Under the OpenCV source directory, I created build/ and ran this:
 ```
 cmake \
     -D ENABLE_PRECOMPILED_HEADERS=OFF \
