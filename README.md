@@ -103,7 +103,7 @@ torch.backends.cudnn.is_acceptable(torch.cuda.FloatTensor(1))
 If `True`, congratulations!
 
 ## TorchVision
-`pip3 install torchvision`
+`pip3 --no-deps install torchvision`
 
 ## Cleanup
 The [postFlashTX1](https://github.com/jetsonhacks/postFlashTX1.git) repo contains some useful cleanup scripts. In addition:
